@@ -45,14 +45,11 @@ app.post("/create-account", async (req, res) => {
         if (!password) {
         return res.status(400).json({ error: true, message: "Password is required" });
     }
-
-    // Check if user already exists
     const isUser = await User.findOne({ email: email });
     if (isUser) {
         return res.status(400).json({ error: true, message: "User already exists" });
     }
 
-    // Create user object respecting the schema structure
     const user = new User({
         fullname,
         email,
@@ -127,45 +124,14 @@ app.get("/get-user" ,authenticateToken, async(req, res)=>{
 
 });
 
-// app.get("/get-all-scholarships/",authenticateToken ,async (req, res) => {
-//     console.log("dum");
-//   try {
-//     const scholarships = await Scholarship.find();
-//         // console.log('Fetched scholarships:', scholarships);  // add this
-
-//     return res.json({
-//       error: false,
-//       scholarships,
-//       message: "All scholarships fetched successfully",
-//     });
-//   } catch (error) {
-//     // console.log("Error fetching scholarships:", error);
-//     return res.status(500).json({
-//       error: true,
-//       message: "Internal Server Error",
-//     });
-//   }
-// });
-
-app.get("/get-all-scholarships/", authenticateToken, async (req, res) => {
+app.get("/get-all-scholarships/",authenticateToken ,async (req, res) => {
+    console.log("dum");
   try {
-    const page = parseInt(req.query.page) || 1;     // default to page 1
-    const limit = parseInt(req.query.limit) || 10;  // default to 10 items per page
-
-    const skip = (page - 1) * limit;
-
-    const [scholarships, total] = await Promise.all([
-      Scholarship.find().skip(skip).limit(limit),
-      Scholarship.countDocuments()
-    ]);
-
+    const scholarships = await Scholarship.find();
     return res.json({
       error: false,
       scholarships,
-      totalItems: total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      message: "Scholarships fetched successfully",
+      message: "All scholarships fetched successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -174,8 +140,6 @@ app.get("/get-all-scholarships/", authenticateToken, async (req, res) => {
     });
   }
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
