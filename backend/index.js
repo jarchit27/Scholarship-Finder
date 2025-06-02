@@ -2,130 +2,133 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const jwt = require("jsonwebtoken");
+
 const config = require("./config.json");
+const User = require("./models/user.model");
+const Scholarship = require("./models/scholarship.model");
+const { authenticateToken } = require("./utilities");
 
 dotenv.config();
-mongoose.connect(config.connectString);
+
+mongoose.connect(config.connectString)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 const app = express();
 const PORT = 8000;
-const jwt = require('jsonwebtoken');
-const User = require("./models/user.model");
-const Scholarship = require("./models/scholarship.model");
-const {authenticateToken} = require("./utilities");
 
 app.use(cors());
 app.use(express.json());
 
+/**
+ * Create Account
+ */
 app.post("/create-account", async (req, res) => {
-    if (!req.body) {
-        return res.status(400).json({ error: true, message: "Invalid request body" });
-    }
+  const { fullname, email, password, gender, address, education } = req.body;
 
-    const { fullname, email, password, gender, address, education } = req.body;
+  if (!fullname || !email || !password || !gender) {
+    return res.status(400).json({ error: true, message: "All required fields must be filled" });
+  }
 
-    if (!fullname) {
-        return res.status(400).json({ error: true, message: "Full Name is required" });
-    }
-    if (!email) {
-        return res.status(400).json({ error: true, message: "Email is required" });
-    }
+  if (!["male", "female", "other"].includes(gender.trim().toLowerCase())) {
+    return res.status(400).json({ error: true, message: "Valid Gender is required (Male, Female, Other)" });
+  }
 
-    if (
-    !gender ||
-    !['male', 'female', 'other'].includes(gender.trim().toLowerCase())
-    ) {
-        console.log("Received gender:", JSON.stringify(gender));
+  const isUser = await User.findOne({ email });
+  if (isUser) {
+    return res.status(400).json({ error: true, message: "User already exists" });
+  }
 
-    return res.status(400).json({
-        error: true,
-        message: "Valid Gender is required (Male, Female, Other)",
-    });
-    }
-        if (!password) {
-        return res.status(400).json({ error: true, message: "Password is required" });
-    }
-    const isUser = await User.findOne({ email: email });
-    if (isUser) {
-        return res.status(400).json({ error: true, message: "User already exists" });
-    }
+  const user = new User({
+    fullname,
+    email,
+    password, // 🔒 You should hash this!
+    gender,
+    address, // Keep as string
+    education: education ? {
+      qualification: education.qualification,
+      institution: education.institution,
+      yearOfPassing: education.yearOfPassing,
+      scoreType: education.scoreType,
+      scoreValue: education.scoreValue,
+    } : undefined,
+  });
 
-    const user = new User({
-        fullname,
-        email,
-        password,
-        gender,
-        address: address ? { state: address.state } : undefined,
-        education: education ? {
-            qualification: education.qualification,
-            institution: education.institution,
-            yearOfPassing: education.yearOfPassing,
-            scoreType: education.scoreType,
-            scoreValue: education.scoreValue
-        } : undefined
-    });
+  await user.save();
 
-    await user.save();
+  const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "10h",
+  });
 
-    const accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "36000m"
-    });
-
-    return res.json({
-        error: false,
-        user,
-        accessToken,
-        message: "Registration Successful",
-    });
+  return res.status(201).json({
+    error: false,
+    user: { fullname: user.fullname, email: user.email, _id: user._id },
+    accessToken,
+    message: "Registration Successful",
+  });
 });
 
+/**
+ * Login
+ */
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
-app.post("/login" , async(req, res)=>{
-    if (!req.body) {
-        return res.status(400).json({ error: true, message: "Invalid request body" });
-    }
+  if (!email || !password) {
+    return res.status(400).json({ error: true, message: "Email and password are required" });
+  }
 
-    const {email,password} = req.body;
+  const userInfo = await User.findOne({ email });
 
-    if(!email){
-        return res.status(400).json({error:true , message: "Email is required"})
-    }
-    if(!password)
-    {
-        return res.status(400).json({error:true , message: "Password is required"})
-    }
+  if (!userInfo || userInfo.password !== password) {
+    return res.status(400).json({ error: true, message: "Wrong credentials" });
+  }
 
-    const userInfo = await User.findOne({email: email});
-    if(!userInfo){
-        return res.status(400).json({error:true , message: "User not found"})
-    }
-    if(userInfo.email == email && userInfo.password == password)
-    {
-        const user = {user: userInfo}
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET,{expiresIn:"36000m"});
+  const accessToken = jwt.sign({ userId: userInfo._id }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "10h",
+  });
 
-        return res.json({error:false, message:"Login Successful", email, accessToken});
-    }
-    else
-    {
-        return res.status(400).json({error:true, message:"Wrong Credentials"});
-    }
+  return res.json({
+    error: false,
+    message: "Login Successful",
+    email,
+    accessToken,
+  });
 });
 
-app.get("/get-user" ,authenticateToken, async(req, res)=>{
+/**
+ * Get Authenticated User
+ */
+app.get("/get-user", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user?.userId;
 
-    const {user} = req.user;
-    const isUser = await User.findOne({_id: user._id});
-    if(!isUser){
-        return res.status(401)
+    if (!userId) {
+      return res.status(401).json({ error: true, message: "Unauthorized: Token missing" });
     }
 
-    return res.status(200).json({user:{ fullname: isUser.fullname, email: isUser.email, "_id" : isUser._id }, message:""});
 
+    const user = await User.findById(userId).select("fullname email _id gender address education");
+
+    if (!user) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+    return res.status(200).json({
+      error: false,
+      user,
+      message: "",
+    });
+  } catch (err) {
+    console.error("Error in /get-user:", err);
+    return res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
 });
 
-app.get("/get-all-scholarships/",authenticateToken ,async (req, res) => {
-    console.log("dum");
+/**
+ * Get All Scholarships
+ */
+app.get("/get-all-scholarships", authenticateToken, async (req, res) => {
   try {
     const scholarships = await Scholarship.find();
     return res.json({
@@ -141,8 +144,11 @@ app.get("/get-all-scholarships/",authenticateToken ,async (req, res) => {
   }
 });
 
+/**
+ * Start Server
+ */
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
 
 module.exports = app;

@@ -15,6 +15,8 @@ const Scholarships = () => {
   const fetchUserInfo = async () => {
     try {
       const response = await axiosInstance.get('/get-user');
+              console.log(response);
+
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
       }

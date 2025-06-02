@@ -21,7 +21,8 @@ const userSchema = new Schema({
     required: true
   },
   address: {
-    state: String,
+    type: String,
+    required: true,
   },
   education: {
     qualification: String,
