@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import ScholarshipCard from '../../components/Cards/ScholarshipCard';
+import Recommendations from '../../components/Recommendation';
 
 const Scholarships = () => {
   const [scholarships, setScholarships] = useState([]);
@@ -11,14 +12,12 @@ const Scholarships = () => {
 
   const navigate = useNavigate();
 
-  // Fetch logged-in user info
   const fetchUserInfo = async () => {
     try {
       const response = await axiosInstance.get('/get-user');
-              console.log(response);
-
       if (response.data && response.data.user) {
         setUserInfo(response.data.user);
+
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -28,7 +27,6 @@ const Scholarships = () => {
     }
   };
 
-  // Fetch all scholarships
   const fetchScholarships = async () => {
     try {
       const response = await axiosInstance.get('/get-all-scholarships');
@@ -42,33 +40,22 @@ const Scholarships = () => {
 
   useEffect(() => {
     fetchUserInfo();
-    fetchScholarships();
+
+    // fetchScholarships(); // temporarily commented since you're using sentiment-based recommendations
   }, []);
+
+              console.log(userInfo);
+
 
   return (
     <>
       <Navbar userInfo={userInfo} />
 
-      <div className="container mx-auto mt-8">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-
-        <div className="grid grid-cols-3 gap-6">
-          {scholarships.length > 0 ? (
-            scholarships.map((scholarship) => (
-              <ScholarshipCard
-                key={scholarship._id}
-                name={scholarship.name}
-                award={scholarship.award}
-                deadline={scholarship.deadline}
-                eligibility={scholarship.eligibility}
-                link={scholarship.link}
-              />
-            ))
-          ) : (
-            <p>No scholarships found.</p>
-          )}
-        </div>
-      </div>
+      {userInfo ? (
+        <Recommendations userEmail={userInfo.email} />
+      ) : (
+        <p className="text-center mt-8 text-gray-500">Loading recommendations...</p>
+      )}
     </>
   );
 };

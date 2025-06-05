@@ -17,9 +17,15 @@ const userSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ['Male', 'Female', 'Other'],
+    enum: ['Male', 'Female'],
     required: true
   },
+  category : {
+    type: String,
+    enum: ['General' ,'SC', 'ST', 'OBC'],
+    required: true
+  },
+
   address: {
     type: String,
     required: true,

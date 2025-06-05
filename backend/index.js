@@ -17,17 +17,19 @@ mongoose.connect(config.connectString)
 
 const app = express();
 const PORT = 8000;
+const recommendationRoute = require("./routes/recommendation");
 
 app.use(cors());
 app.use(express.json());
+app.use("/api", recommendationRoute);
 
 /**
  * Create Account
  */
 app.post("/create-account", async (req, res) => {
-  const { fullname, email, password, gender, address, education } = req.body;
+  const { fullname, email, password, gender,category ,address, education } = req.body;
 
-  if (!fullname || !email || !password || !gender) {
+  if (!fullname || !email || !password || !gender || !category) {
     return res.status(400).json({ error: true, message: "All required fields must be filled" });
   }
 
@@ -44,6 +46,7 @@ app.post("/create-account", async (req, res) => {
     fullname,
     email,
     password, // 🔒 You should hash this!
+    category,
     gender,
     address, // Keep as string
     education: education ? {
@@ -109,7 +112,7 @@ app.get("/get-user", authenticateToken, async (req, res) => {
     }
 
 
-    const user = await User.findById(userId).select("fullname email _id gender address education");
+    const user = await User.findById(userId).select("fullname email _id gender category address education");
 
     if (!user) {
       return res.status(404).json({ error: true, message: "User not found" });

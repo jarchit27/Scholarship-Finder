@@ -9,6 +9,8 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
+  const [category, setCategory] = useState('');
+
   const [address, setAddress] = useState('');
 
   // Education fields
@@ -39,6 +41,7 @@ const SignUp = () => {
         email,
         password,
         gender,
+        category,
         address,
         education: {
           qualification,
@@ -97,8 +100,21 @@ const SignUp = () => {
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Other">Other</option>
           </select>
+
+          <select
+            className="input-box"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Select Category</option>
+            <option value="General">General</option>
+            <option value="OBC">OBC</option>
+            <option value="ST">ST</option>
+            <option value="SC">SC</option>
+
+          </select>
+
 
           <PasswordInput 
             value={password}
