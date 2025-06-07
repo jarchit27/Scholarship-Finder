@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getInitials } from '../../utils/helper';
+import { useNavigate } from "react-router-dom";
 
 const ProfileInfo = ({ userInfo, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -88,8 +91,8 @@ const ProfileInfo = ({ userInfo, onLogout }) => {
           <div className="py-1">
             <button
               onClick={() => {
-                // Navigate to profile page
-                setIsDropdownOpen(false);
+                  navigate("/profile");                
+                  setIsDropdownOpen(false);
               }}
               className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
             >
