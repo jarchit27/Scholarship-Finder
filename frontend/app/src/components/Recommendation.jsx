@@ -85,9 +85,9 @@ const Recommendations = ({ userEmail }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">
+      {/* <h2 className="text-2xl font-bold text-gray-900">
         Top Scholarship Recommendations
-      </h2>
+      </h2> */}
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {recommendations.map((rec, index) => (
@@ -114,6 +114,18 @@ const Recommendations = ({ userEmail }) => {
                 💰 {rec.award}
               </span>
             </div>
+
+            
+            <div className="mb-4">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Deadline:
+              {/* 
+              <p className="text-gray-600 text-sm leading-relaxed"> */}
+                {rec.deadline}
+                </h4>
+              {/* </p> */}
+            </div>
+
 
             {/* Eligibility */}
             <div className="mb-4">
