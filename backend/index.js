@@ -152,3 +152,32 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
+// index.js (add this at the bottom, before app.listen)
+
+// Update Authenticated User
+app.put('/update-user', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    // Pull only the fields you allow the user to edit:
+    const { fullname, gender, address, education } = req.body;
+
+    const update = { fullname, gender, address };
+    if (education) update.education = education;
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: update },
+      { new: true, select: 'fullname email gender address education createdAt' }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: true, message: 'User not found' });
+    }
+
+    res.json({ error: false, user, message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Error in /update-user:', err);
+    res.status(500).json({ error: true, message: 'Internal Server Error' });
+  }
+});
