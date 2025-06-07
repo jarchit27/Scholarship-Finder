@@ -85,35 +85,7 @@ const Navbar = ({ userInfo }) => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
-          <div className="px-4 pt-2 pb-3 space-y-1">
-            <button
-              onClick={() => {
-                navigate('/');
-                setIsMenuOpen(false);
-              }}
-              className="block w-full text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => {
-                navigate('/scholarships');
-                setIsMenuOpen(false);
-              }}
-              className="block w-full text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-            >
-              Browse Scholarships
-            </button>
-            <button
-              onClick={() => {
-                navigate('/applications');
-                setIsMenuOpen(false);
-              }}
-              className="block w-full text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-            >
-              My Applications
-            </button>
-            
+          <div className="px-4 pt-2 pb-3 space-y-1">            
             {!userInfo && (
               <div className="pt-2 border-t border-gray-100">
                 <button

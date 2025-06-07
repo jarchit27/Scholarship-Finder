@@ -66,7 +66,7 @@ const Scholarships  = () => {
             {/* Welcome Section */}
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Welcome back, {userInfo.fullName || userInfo.email}!
+                Welcome back, {userInfo.fullname}!
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Ready to explore new scholarship opportunities? We've curated the best matches based on your profile.
