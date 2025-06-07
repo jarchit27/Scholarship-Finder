@@ -115,13 +115,6 @@ const Login = () => {
                   />
                 </div>
 
-                {/* Forgot Password Link */}
-                {/* <div className="text-right">
-                  <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 transition-colors duration-200">
-                    Forgot Password?
-                  </Link>
-                </div> */}
-
                 {/* Error Message */}
                 {error && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
