@@ -54,7 +54,7 @@ const Login = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      <div className="flex flex-col lg:flex-row ">
+      <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Hero Section */}
         <div className="lg:w-1/2 bg-gradient-to-br from-blue-600 via-purple-700 to-blue-800 flex items-center justify-center p-8 lg:p-12">
           <div className="max-w-md text-center lg:text-left text-white">
