@@ -27,9 +27,9 @@ app.use("/api", recommendationRoute);
  * Create Account
  */
 app.post("/create-account", async (req, res) => {
-  const { fullname, email, password, gender,category ,address, education } = req.body;
+  const { fullname, email, password, gender ,address, education } = req.body;
 
-  if (!fullname || !email || !password || !gender || !category) {
+  if (!fullname || !email || !password || !gender) {
     return res.status(400).json({ error: true, message: "All required fields must be filled" });
   }
 
@@ -45,8 +45,7 @@ app.post("/create-account", async (req, res) => {
   const user = new User({
     fullname,
     email,
-    password, // 🔒 You should hash this!
-    category,
+    password,
     gender,
     address, // Keep as string
     education: education ? {
@@ -110,9 +109,7 @@ app.get("/get-user", authenticateToken, async (req, res) => {
     if (!userId) {
       return res.status(401).json({ error: true, message: "Unauthorized: Token missing" });
     }
-
-
-    const user = await User.findById(userId).select("fullname email _id gender category address education");
+    const user = await User.findById(userId).select("fullname email _id gender address education");
 
     if (!user) {
       return res.status(404).json({ error: true, message: "User not found" });
