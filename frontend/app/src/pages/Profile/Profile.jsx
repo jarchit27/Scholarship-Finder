@@ -1,3 +1,4 @@
+// src/pages/Profile/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import {
   User,
@@ -9,6 +10,11 @@ import {
   Edit3,
   Save,
   X,
+  Camera,
+  Trophy,
+  Target,
+  BookOpen,
+  Home
 } from 'lucide-react';
 import Navbar from '../../components/Navbar/Navbar';
 import axiosInstance from '../../utils/axiosInstance';
@@ -86,6 +92,10 @@ const ProfilePage = () => {
     }
   };
 
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
   const formatDate = iso =>
     new Date(iso).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -109,6 +119,17 @@ const ProfilePage = () => {
       <Navbar userInfo={user} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Home Button */}
+        <div className="mb-6">
+          <button
+            onClick={handleGoHome}
+            className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors shadow-md border"
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Back to Home
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Profile Card (left) */}
@@ -122,6 +143,9 @@ const ProfilePage = () => {
                         {displayData.fullname.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
+                    {/* <button className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"> */}
+                      {/* <Camera className="w-4 h-4 text-gray-600" /> */}
+                    {/* </button> */}
                   </div>
                   <h2 className="mt-4 text-xl font-bold text-white">{displayData.fullname}</h2>
                   <p className="text-blue-100">{displayData.email}</p>

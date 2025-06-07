@@ -192,10 +192,8 @@ if __name__ == "__main__":
     user_email = sys.argv[1].strip()
     ranked = rank_scholarships_for_user(user_email)
 
-    # Print top 10 scholarships as JSON
-    top_n = 10
     output = []
-    for sch in ranked[:top_n]:
+    for sch in ranked:
         output.append({
             "name":        sch.get("name", "<no name>"),
             "award":       sch.get("award", ""),
