@@ -32,12 +32,13 @@ A web application that helps students automatically discover scholarships that m
 **Data Processing / Scraping:**
 - Python (Selenium, TextBlob, VADER)
 
-📦 Installation
+**📦 Installation**
 
+```bash
 🖥️ Clone the repository
 
-git clone https://github.com/your-username/scholarship-finder.git
-cd scholarship-finder
+git clone https://github.com/jarchit27/Scholarship-Finder
+cd Scholarship-Finder
 
 📲 Frontend (React.js + TailwindCSS)
 
