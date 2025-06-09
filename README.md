@@ -31,26 +31,3 @@ A web application that helps students automatically discover scholarships that m
 
 **Data Processing / Scraping:**
 - Python (Selenium, TextBlob, VADER)
-
----
-
-## 📁 Project Structure
-
-```bash
-scholarship-finder/
-│
-├── frontend/             # React.js + TailwindCSS UI
-│   ├── public/
-│   └── src/
-│
-├── backend/              # Express.js API
-│   ├── routes/
-│   └── controllers/
-│
-├── scraper/              # Python scrapers with Selenium
-│
-├── matcher/              # Python matching algorithm and sentiment analysis
-│
-├── .env                  # Environment variables
-├── README.md
-└── package.json
