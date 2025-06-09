@@ -1,6 +1,6 @@
 # 🎓 Scholarship Finder
 
-A web application that helps students automatically discover scholarships that match their profile. Built by the Coding Club, IIT Guwahati (May 2025).
+A web application that helps students automatically discover scholarships that match their profile.
 
 ---
 
