@@ -35,7 +35,7 @@ A web application that helps students automatically discover scholarships that m
 **📦 Installation**
 
 ```bash
-🖥️ Clone the repository
+🖥️ Clone The Repository
 
 git clone https://github.com/jarchit27/Scholarship-Finder
 cd Scholarship-Finder
