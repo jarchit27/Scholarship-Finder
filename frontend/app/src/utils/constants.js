@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://scholarship-finder-in9d.onrender.com'
+export const BASE_URL = 'https://localhost:8000'
